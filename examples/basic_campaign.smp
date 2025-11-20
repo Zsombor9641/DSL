@@ -1,0 +1,12 @@
+// Példa 1: Alapvető kampány - minimális konfiguráció
+campaign "basic_promo" duration(7 days) {
+    platforms: [instagram, facebook]
+    
+    content_types {
+        post "daily_update" {
+            text: "Check out our latest products!"
+            hashtags: ["#promo", "#sale"]
+            schedule: daily at("12:00")
+        }
+    }
+}

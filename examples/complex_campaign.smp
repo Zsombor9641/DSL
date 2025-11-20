@@ -1,0 +1,37 @@
+// Példa 2: Összetett kampány - teljes funkcionalitás  
+campaign "summer_collection_2024" duration(30 days) {
+    platforms: [instagram, facebook, twitter, tiktok]
+    
+    content_types {
+        post "product_showcase" {
+            text: "Discover our amazing summer collection! Limited time offer - 40% off everything!"
+            media: "summer_collection_banner.jpg"
+            hashtags: ["#summer", "#fashion", "#sale", "#limitedoffer"]
+            schedule: every_day at("09:00", "15:00", "20:00")
+        }
+        
+        story "behind_scenes" {
+            text: "Behind the scenes of our summer photoshoot"
+            media: "bts_video.mp4"
+            schedule: every(2 days) at("14:00")
+        }
+        
+        reel "styling_tips" {
+            text: "5 ways to style your summer outfit"
+            hashtags: ["#stylingtips", "#summer", "#fashion"]
+            schedule: weekly on("friday") at("18:00")
+        }
+    }
+    
+    targeting {
+        age_range: 18 to 35
+        interests: ["fashion", "lifestyle", "shopping"]
+        location: ["US", "CA", "UK"] optional
+    }
+    
+    budget {
+        total: $5000
+        daily_limit: $200 optional
+        auto_optimize: true
+    }
+}

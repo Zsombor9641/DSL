@@ -1,0 +1,85 @@
+// Social Media Content Planner DSL - Lark Grammar
+// Teljes nyelvtan definíció a parser generálásához
+
+start: campaign_definition
+
+// ===== CAMPAIGN DEFINITION =====
+campaign_definition: "campaign" STRING "duration" "(" duration_value ")" "{" campaign_body "}"
+
+campaign_body: platform_definition content_definition targeting_definition? budget_definition?
+
+// ===== PLATFORM DEFINITION =====
+platform_definition: "platforms" ":" "[" platform_list "]"
+platform_list: platform_name ("," platform_name)*
+platform_name: "instagram" | "facebook" | "twitter" | "tiktok" | "linkedin" | "youtube"
+
+// ===== CONTENT DEFINITION =====
+content_definition: "content_types" "{" content_item+ "}"
+content_item: content_type STRING "{" content_properties "}"
+content_type: "post" | "story" | "reel" | "video" | "image"
+
+content_properties: content_property+
+content_property: text_property 
+                | media_property 
+                | hashtag_property 
+                | schedule_property
+
+text_property: "text" ":" STRING
+media_property: "media" ":" STRING ("optional")?
+hashtag_property: "hashtags" ":" "[" string_list "]"
+schedule_property: "schedule" ":" schedule_expression
+
+// ===== SCHEDULE EXPRESSIONS =====
+schedule_expression: daily_schedule 
+                   | weekly_schedule 
+                   | interval_schedule
+                   | time_specific_schedule
+
+daily_schedule: "daily" "at" "(" time_list ")"
+              | "every_day" "at" "(" time_list ")"
+
+weekly_schedule: "weekly" "on" "(" STRING ")" "at" "(" time_list ")"
+
+interval_schedule: "every" "(" NUMBER time_unit ")" ("at" "(" time_list ")")? ("until" "(" STRING ")")?
+
+time_specific_schedule: "at" "(" time_list ")"
+
+time_list: time_value ("," time_value)*
+time_value: STRING  // "HH:MM" format
+
+// ===== TARGETING DEFINITION =====
+targeting_definition: "targeting" "{" targeting_rules "}" ("optional")?
+targeting_rules: targeting_rule+
+targeting_rule: age_range_rule | interests_rule | location_rule
+
+age_range_rule: "age_range" ":" NUMBER "to" NUMBER
+interests_rule: "interests" ":" "[" string_list "]"
+location_rule: "location" ":" "[" string_list "]" ("optional")?
+
+// ===== BUDGET DEFINITION =====
+budget_definition: "budget" "{" budget_rules "}" ("optional")?
+budget_rules: budget_rule+
+budget_rule: total_budget_rule | daily_limit_rule | auto_optimize_rule
+
+total_budget_rule: "total" ":" money_value
+daily_limit_rule: "daily_limit" ":" money_value ("optional")?
+auto_optimize_rule: "auto_optimize" ":" boolean_value
+
+// ===== DURATION AND TIME =====
+duration_value: NUMBER time_unit
+time_unit: "days" | "hours" | "minutes" | "weeks" | "months"
+
+// ===== BASIC TYPES =====
+string_list: STRING ("," STRING)*
+money_value: "$" NUMBER ("." NUMBER)?
+boolean_value: "true" | "false"
+
+// ===== TERMINALS =====
+STRING: /"[^"]*"/          // String literals with quotes
+NUMBER: /\d+/              // Positive integers
+COMMENT: /\/\/[^\n]*/      // Comments starting with //
+
+// ===== WHITESPACE =====
+%import common.WS
+%ignore WS
+%ignore COMMENT

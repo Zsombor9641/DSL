@@ -1,0 +1,83 @@
+// Hibás példák - teszteléshez
+
+// 1. Hiányzó kötelező mező (platforms)
+campaign "missing_platforms" duration(5 days) {
+    content_types {
+        post "test" {
+            text: "Hello world"
+            schedule: daily at("12:00")
+        }
+    }
+}
+
+// 2. Érvénytelen platform név
+campaign "invalid_platform" duration(10 days) {
+    platforms: [instagram, snapchat, invalid_platform]
+    content_types {
+        post "test" {
+            text: "Test post"
+            schedule: daily at("12:00")
+        }
+    }
+}
+
+// 3. Hibás szintaxis - hiányzó zárójel
+campaign "syntax_error" duration(7 days) {
+    platforms: [instagram, facebook
+    content_types {
+        post "test" {
+            text: "Test"
+            schedule: daily at("12:00")
+        }
+    }
+}
+
+// 4. Érvénytelen időformátum
+campaign "invalid_time" duration(5 days) {
+    platforms: [instagram]
+    content_types {
+        post "test" {
+            text: "Test post"
+            schedule: daily at("25:70")  // invalid time
+        }
+    }
+}
+
+// 5. Negatív költségvetés
+campaign "negative_budget" duration(10 days) {
+    platforms: [facebook]
+    content_types {
+        post "test" {
+            text: "Test"
+            schedule: daily at("12:00")
+        }
+    }
+    budget {
+        total: $-500  // negative amount
+    }
+}
+
+// 6. Üres szöveg
+campaign "empty_text" duration(3 days) {
+    platforms: [twitter]
+    content_types {
+        post "empty" {
+            text: ""  // empty string
+            schedule: daily at("10:00")
+        }
+    }
+}
+
+// 7. Hibás korhatár
+campaign "invalid_age" duration(7 days) {
+    platforms: [instagram]
+    content_types {
+        post "test" {
+            text: "Test post"
+            schedule: daily at("12:00")
+        }
+    }
+    targeting {
+        age_range: 150 to 200  // unrealistic age range
+    }
+}
